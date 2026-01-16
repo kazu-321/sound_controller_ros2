@@ -25,9 +25,11 @@ button_sound::button_sound (const rclcpp::NodeOptions &node_options) : Node ("bu
         std::string package   = this->declare_parameter<std::string> ("button_" + std::to_string (i) + ".sound_package", "");
         std::string directory = this->declare_parameter<std::string> ("button_" + std::to_string (i) + ".sound_directory", "");
         std::string file      = this->declare_parameter<std::string> ("button_" + std::to_string (i) + ".sound_file", "");
+        double      volume    = this->declare_parameter<double> ("button_" + std::to_string (i) + ".volume", 1.0);
         sound_packages_.push_back (package);
         sound_directories_.push_back (directory);
         sound_files_.push_back (file);
+        volumes_.push_back (volume);
     }
     last_joy_msg_ = nullptr;
 }
@@ -59,7 +61,7 @@ void button_sound::joy_callback (const sensor_msgs::msg::Joy::SharedPtr msg) {
         sound_request.command = sound_play::msg::SoundRequest::PLAY_ONCE;
         sound_request.arg     = sound_directories_[i] + "/" + sound_files_[i];
         sound_request.arg2    = sound_packages_[i];
-        sound_request.volume  = 1.0;
+        sound_request.volume  = volumes_[i];
         publisher_->publish (sound_request);
     }
     last_joy_msg_ = msg;

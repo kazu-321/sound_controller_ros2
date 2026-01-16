@@ -17,25 +17,27 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "sound_play/msg/sound_request.hpp"
+
 #include "sensor_msgs/msg/joy.hpp"
 
 namespace button_sound {
 class button_sound : public rclcpp::Node {
-public:
+   public:
     button_sound (const rclcpp::NodeOptions &node_options);
 
-private:
-    size_t num_button_;
+   private:
+    size_t                   num_button_;
     std::vector<std::string> sound_packages_;
     std::vector<std::string> sound_directories_;
     std::vector<std::string> sound_files_;
+    std::vector<double>      volumes_;
 
     sensor_msgs::msg::Joy::SharedPtr last_joy_msg_;
 
-    void joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg);
+    void joy_callback (const sensor_msgs::msg::Joy::SharedPtr msg);
 
     rclcpp::Publisher<sound_play::msg::SoundRequest>::SharedPtr publisher_;
-    rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr subscriber_;
+    rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr      subscriber_;
 };
 }  // namespace button_sound
 #endif  // __BUTTON_SOUND_HPP__
